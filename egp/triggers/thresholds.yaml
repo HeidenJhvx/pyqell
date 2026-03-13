@@ -1,0 +1,52 @@
+# EGP Thresholds — pyq001 (Elliott Wave Quant)
+# v4.0 | 소집 트리거 자동 감지 기준
+
+version: "4.0"
+project: "pyq001"
+
+# ── 파트 임계점 ─────────────────────────────────────────────────
+part_thresholds:
+  quant_engine:
+    phase_completion: true
+    drawdown_pct: 0.10          # MDD 10% 초과 → 즉시 중단
+    signal_failure_rate: 0.20   # 신호 실패율 20% 초과 → 검토
+    notify: ["CRO", "COO"]
+    action_on_breach:
+      drawdown: "HALT_TRADING + REPORT_CHAIRMAN"
+      signal_failure: "FLAG_CRO + PHASE_REVIEW"
+
+  data_layer:
+    api_error_rate: 0.05        # 데이터 수집 오류율 5% 초과
+    latency_ms: 3000            # WebSocket 지연 3초 초과
+    notify: ["CTO", "COO"]
+
+  learning_layer:
+    parse_failure_rate: 0.10    # LLM 파싱 실패율 10% 초과
+    notify: ["CNO"]
+
+# ── 자율도 레벨 ─────────────────────────────────────────────────
+autonomy_levels:
+  current: 0
+
+  level_0:
+    description: "전체 Claude Code + Chairman 승인"
+    condition: "Bootstrap 단계"
+    active: true
+
+  level_2:
+    description: "Phase 내 실행 자율 / Gate만 Chairman"
+    condition: "Phase Gate 3회 성공 + Chairman 선언"
+    target: "Phase 4 이후"
+
+  level_5:
+    description: "전략 변경 시만 Chairman 개입"
+    condition: "Chairman 직접 선언"
+    target: "완전 자생 임계 도달 시"
+
+# ── 완전 자생 임계 ───────────────────────────────────────────────
+autonomous_threshold:
+  conditions:
+    - "실거래 수익으로 인프라 비용 자체 충당"
+    - "Claude Code 없이 30일 이상 자율 운영"
+    - "EGP 임계점 위반 없음"
+  declaration: "Chairman 직접 선언"

@@ -1,0 +1,68 @@
+# EGP Council Roles — pyq001
+# v4.0 간소화 | Bootstrap Mode
+# Claude Code가 전 역할 대행
+
+version: "4.0"
+project: "pyq001"
+chairman: "qy3R"
+mode: "bootstrap"
+
+bootstrap_delegation:
+  # Bootstrap 단계에서 Claude Code가 수행하는 역할
+  - id: CSO
+    delegated_to: "Claude Code"
+    focus:
+      - "6레이어 아키텍처 방향성 검토"
+      - "Elliott Wave 시스템이 SMA RL 시스템(project/)과 충돌하지 않는지 확인"
+      - "멀티마켓 확장 로드맵 유지"
+
+  - id: CRO
+    delegated_to: "Claude Code"
+    focus:
+      - "파동 카운팅 주관성 리스크 플래그 (동일 패턴 복수 해석)"
+      - "과최적화 위험 (백테스트 ≠ 실전 성과)"
+      - "API 레이트 리밋, ccxt 연결 실패 시나리오"
+    auto_flags:
+      - condition: "drawdown_pct > 0.10"
+        action: "즉시 중단 + Chairman 보고"
+      - condition: "signal_failure_rate > 0.20"
+        action: "CRO 플래그 + Phase 검토"
+
+  - id: COO
+    delegated_to: "Claude Code"
+    focus:
+      - "Phase 진행 상태 추적"
+      - "구현 병목 파악"
+      - "각 레이어 완성도 확인"
+
+  - id: CNO
+    delegated_to: "Claude Code"
+    focus:
+      - "Claude API 호출 최소화 (text → JSON 파싱에만 사용)"
+      - "로컬 처리 최대화 (데이터 수집, 파동 탐지 전부 로컬)"
+    model_routing:
+      text_to_json_parsing: "Claude API (claude-sonnet-4-6)"
+      chart_image_analysis: "Qwen2.5-VL local (optional, Phase 2)"
+      data_collection: "로컬 ccxt (API 호출 없음)"
+      wave_detection: "로컬 Python 연산"
+
+  - id: CTO
+    delegated_to: "Claude Code"
+    focus:
+      - "ccxt 통합 API 적합성"
+      - "parquet vs SQLite 데이터 분리 전략"
+      - "비동기 WebSocket 안정성"
+      - "Phase별 기술 부채 관리"
+
+  - id: CPO
+    delegated_to: "Claude Code"
+    focus:
+      - "각 Phase 산출물이 실제 동작하는지 검증"
+      - "OHLCV 수집 → 저장 → 로드 전 사이클 확인"
+      - "Wave 시나리오가 실거래 가능한 신호인지 확인"
+
+graduation_criteria:
+  # Bootstrap 졸업 조건 (Phase 5 이후)
+  - "Phase Gate 3회 이상 성공"
+  - "페이퍼 트레이딩 1주 이상 안정 운영"
+  - "Chairman이 Level 2 자율도 선언"
